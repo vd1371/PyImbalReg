@@ -1,3 +1,6 @@
 ''' The __init__ for the PyImbalReg '''
 
-from .data_handler import *
+from .DataHandler import *
+from .RU import RandomUndersampling
+from .RO import RandomOversampling
+from .GN import GaussianNoise
