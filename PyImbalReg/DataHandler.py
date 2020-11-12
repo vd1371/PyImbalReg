@@ -1,4 +1,5 @@
 '''
+
 This object is developed for handling the data before conduting any analysis on it
 These processes include but not limited to checking the Nan files, data type, etc.
 '''
@@ -113,13 +114,14 @@ class DataHandler:
 		DataHandler.find_normal_rare_values()
 
 	# Finding the relevance value of the Y
-	def find_normal_rare_values():
+	def find_normal_rare_values(should_sort = True):
 
 		# Finding bins with the normal Y and rare Y
 		DataHandler.rare_bins, DataHandler.normal_bins = [], []
 
-		# Sorting the values of df
-		DataHandler.df.sort_values(DataHandler.df.columns[-1], inplace = True)
+		if should_sort:
+			# Sorting the values of df
+			DataHandler.df.sort_values(DataHandler.df.columns[-1], inplace = True)
 
 		RARE = True
 

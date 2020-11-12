@@ -2,6 +2,8 @@
 
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
+from scipy.stats import norm
+
 
 import PyImbalReg as pir
 
@@ -15,9 +17,11 @@ plt.xlabel("Values")
 plt.ylabel("Frequency")
 plt.show()
 
+average, std = data.iloc[:, -1].mean(), data.iloc[:, -1].std()
+
 def default_relevance_function(x):
-	return 1 - norm_dist.pdf(x, loc = average, scale = std) / \
-			norm_dist.pdf(average, loc = average, scale = std)
+	return 1 - norm.pdf(x, loc = average, scale = std) / \
+			norm.pdf(average, loc = average, scale = std)
 
 gn = pir.GaussianNoise(data,
 						rel_func = default_relevance_function,

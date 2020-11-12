@@ -1,4 +1,4 @@
-# A simple example of addin gaussian noise 
+# A simple example of addin gaussian noise
 
 import matplotlib.pyplot as plt
 from seaborn import load_dataset

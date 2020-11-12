@@ -1,4 +1,7 @@
-''' The __init__ for the PyImbalReg '''
+'''
+
+The __init__ for the PyImbalReg
+'''
 
 __version__ = "0.0.2"
 
