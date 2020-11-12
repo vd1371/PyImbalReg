@@ -5,6 +5,7 @@ These processes include but not limited to checking the Nan files, data type, et
 
 import pandas as pd
 import numpy as np
+import warnings
 from scipy.stats import norm
 
 class DataHandler:
@@ -182,6 +183,40 @@ class DataHandler:
 			raise ValueError ("The perm_amp must be float")
 
 		return True
+
+	# Getting the categorical columns of a dataframe
+	@staticmethod
+	def get_categorical_cols(df):
+
+		# This method is called when the categorical columns are not passed by the user
+
+		warning_message = "\n\n---------------------------------------\n" +\
+						"The categorical_columns is not define by you.\n" +\
+						"I will try to find the categorical columns using heuristic methods.\n" +\
+						"There is a small chance it fails. Consider passing the categorical_columns. \n" +\
+						"---------------------------------------\n"
+		warnings.warn(warning_message, UserWarning , stacklevel = 2)
+
+		nominal_dtypes = ['object', 'bool', 'datetime64']
+
+		categorical_columns = []
+		for col in df.columns:
+
+			# Adding the string, boolean, and datetimes columns
+			if df[col].dtypes in nominal_dtypes:
+				categorical_columns.append(col)
+
+			# Checking the integer columns
+			elif pd.api.types.is_integer_dtype(df[col].dtypes):
+				
+				# A heuristic method to check if the column in categorical
+				if df[col].nunique() / df[col].count() < 0.05:
+					categorical_columns.append(col)
+
+		return categorical_columns
+
+
+
 
 
 

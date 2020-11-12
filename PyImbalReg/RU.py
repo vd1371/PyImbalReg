@@ -32,8 +32,7 @@ class RandomUndersampling(DataHandler):
 
 		for df in self.normal_bins:
 			# Finding number of sample to be selected
-			n = int((1 - self.u_percentage) * len(df))
-			undersampled_bins.append(df.sample(n = n))
+			undersampled_bins.append(df.sample(frac = 1 - self.u_percentage))
 
 		# Concatenating the undersample normal samples and rare samples
 		df = pd.concat(undersampled_bins + self.rare_bins)
