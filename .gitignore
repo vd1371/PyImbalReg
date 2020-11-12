@@ -1,2 +1,5 @@
 *.pyc
 my*
+build/
+dist/
+PyImbalReg.egg-info/
