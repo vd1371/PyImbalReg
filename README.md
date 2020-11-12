@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/vd1371/PyImbalReg/xtra/banner.png">
+  <img src= "https://github.com/vd1371/PyImbalReg/blob/main/xtra/banner.png">
 </div>
 
 # PyImbalReg
