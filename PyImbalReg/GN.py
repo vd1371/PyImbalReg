@@ -2,10 +2,10 @@
 This module is designed to undersample a part of the normal cases
 and add gaussian noise to the rare samples
 
-Ref: 
+Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
-Neurocomputing, 343, pp.76-99. 
+Neurocomputing, 343, pp.76-99.
 '''
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ class GaussianNoise(DataHandler):
 					u_percentage = 0.5,			 # The undersampling percentage. This fraction will be removed
 					o_percentage = 0.5,			 # The oversampling percentage. (This fraction - 1) will be added
 					perm_amp = 0.1,				 # The permutation amplitude
-					categorical_columns = None	 # categorical columns will be used for generating new samples 
+					categorical_columns = None	 # categorical columns will be used for generating new samples
 					):
 		super().__init__(df, y_col, rel_func, threshold)
 
@@ -40,7 +40,6 @@ class GaussianNoise(DataHandler):
 		# Finding the categorical columns
 		if categorical_columns is None:
 			categorical_columns = self.get_categorical_cols(df)
-		
 		self.categorical_columns = categorical_columns
 
 	def get(self):
@@ -85,7 +84,7 @@ class GaussianNoise(DataHandler):
 
 			if col in categorical_columns:
 				# Find the frequency of each cols
-				# Value counts is a pd.Series. The index is the categories 
+				# Value counts is a pd.Series. The index is the categories
 				# And the values are the probability of occurrence
 				weights = df[col].value_counts(normalize = True)
 				info_dict[col] = weights
@@ -97,7 +96,7 @@ class GaussianNoise(DataHandler):
 
 			else:
 				# Find the mean and std of the columns
-				MEAN, STD = 0, 1
+				STD = 1
 				info_dict[col] = [df[col].mean(), df[col].std()]
 
 				# Oversampling values

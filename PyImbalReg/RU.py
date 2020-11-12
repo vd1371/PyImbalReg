@@ -1,7 +1,7 @@
 '''
 This module is designed to undersample the normal samples.
 
-Ref: 
+Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.

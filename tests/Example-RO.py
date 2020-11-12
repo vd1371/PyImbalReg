@@ -1,11 +1,7 @@
-# A simple example of oversampling the 
+# A simple example of oversampling
 
 import matplotlib.pyplot as plt
-
-from sklearn.datasets import load_boston
 from seaborn import load_dataset
-import pandas as pd
-
 import PyImbalReg as pir
 
 data = load_dataset('dots')

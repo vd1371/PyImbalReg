@@ -1,5 +1,5 @@
 '''
-This module is designed to apply WERCS algorithm for imbalanced regression.Ref: 
+This module is designed to apply WERCS algorithm for imbalanced regression.Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
@@ -35,5 +35,4 @@ class WERCS(DataHandler):
 		# Undersampling with relevance_function values
 		undersample_df = self.df.sample(frac = 1 - self.u_percentage, replace = True, weights = 1 - self.Y_utility)
 		undersample_df.index = [ f"UnderSampled-{i}-{x}" for i, x in enumerate(undersample_df.index)]
-	
 		return pd.concat([self.df, oversample_df, undersample_df])

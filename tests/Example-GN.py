@@ -1,10 +1,7 @@
-# A simple example of addin gaussian noise 
+# A simple example of addin gaussian noise
 
 import matplotlib.pyplot as plt
-
-from sklearn.datasets import load_boston
 from seaborn import load_dataset
-import pandas as pd
 
 import PyImbalReg as pir
 
@@ -18,11 +15,9 @@ plt.xlabel("Values")
 plt.ylabel("Frequency")
 plt.show()
 
-
 def default_relevance_function(x):
 	return 1 - norm_dist.pdf(x, loc = average, scale = std) / \
 			norm_dist.pdf(average, loc = average, scale = std)
-	return 0
 
 gn = pir.GaussianNoise(data,
 						rel_func = default_relevance_function,

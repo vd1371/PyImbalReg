@@ -4,7 +4,6 @@ These processes include but not limited to checking the Nan files, data type, et
 '''
 
 import pandas as pd
-import numpy as np
 import warnings
 from scipy.stats import norm
 
@@ -12,7 +11,7 @@ class DataHandler:
 
 	instance = None
 
-	def __init__(self, 
+	def __init__(self,
 				df = pd.DataFrame(),         # The data as a pandas dataframe
 				y_col = None,				 # The name of the Y column header
 				rel_func = None,			 # The relevance function
@@ -64,7 +63,7 @@ class DataHandler:
 			Relevenace function is a relevance/utility function that maps the Y to [0, 1]
 			Values of u(Y) > threshold are considered as rare samples
 
-			Ref: 
+			Ref:
 			Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 			Pre-processing approaches for imbalanced distributions in regression.
 			Neurocomputing, 343, pp.76-99.
@@ -86,7 +85,7 @@ class DataHandler:
 
 			DataHandler.rel_func = default_rel_func
 
-		# Check if the rel_fun is a 
+		# Check if the rel_fun is a function
 		elif not callable(rel_func):
 			raise TypeError ("The rel_func is expected to be a fuction, but it's not")
 
@@ -104,7 +103,6 @@ class DataHandler:
 		# Check if the threshold is a float
 		if not isinstance(threshold, (float)):
 			raise ValueError ("The threshold must be float")
-		
 		# Check if the threshold is between 0 and 1
 		elif not (threshold > 0 and threshold < 1):
 			raise ValueError ("The threshold must be between [0,1]. But it's not.")
@@ -123,11 +121,10 @@ class DataHandler:
 		# Sorting the values of df
 		DataHandler.df.sort_values(DataHandler.df.columns[-1], inplace = True)
 
-		RARE, NORMAL = True, False
-		bin_indices = []
+		RARE = True
 
 		previous_status = DataHandler.rel_func(DataHandler.df.iloc[0, -1]) >= DataHandler.threshold
-		start_idx = 0
+		start_idx, last_idx = 0, 0
 		for i, idx in enumerate(DataHandler.df.index[1:]):
 
 			# Check if it's a rare case or not
