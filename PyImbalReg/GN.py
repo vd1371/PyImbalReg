@@ -26,7 +26,7 @@ class GaussianNoise(DataHandler):
 					perm_amp = 0.1,				 # The permutation amplitude
 					categorical_columns = None	 # categorical columns will be used for generating new samples 
 					):
-		super().__init__(df, y_col, rel_func, thresholds)
+		super().__init__(df, y_col, rel_func, threshold)
 
 		if self._is_u_percentage_correct(u_percentage):
 			self.u_percentage = u_percentage
@@ -47,7 +47,7 @@ class GaussianNoise(DataHandler):
 
 		# Undersampling the normal samples
 		# Other parameters such as df, y_col, and threshold will be...
-		# .. the same as the same parent of GaussianNoise. The prent is DataHandler
+		# .. the same as the same parent of GaussianNoise. The parent is DataHandler
 		ru = RandomUndersampling(u_percentage = self.u_percentage)
 		undersample_df = ru.get()
 		oversample_df = self._oversample_with_GN()
@@ -63,7 +63,7 @@ class GaussianNoise(DataHandler):
 		oversampled_bins = []
 
 		for df in self.rare_bins:
-			new_df = self._get_new_noisy_points(self.df, self.categorical_columns, self.o_percentage, self.perm_amp)
+			new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
 			oversampled_bins.append(new_df)
 
 		return pd.concat(oversampled_bins)
