@@ -3,10 +3,13 @@
 </div>
 
 # PyImbalReg
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/525f3e4f9261425eba1e40ff2b1d7710)](https://app.codacy.com/gh/vd1371/PyImbalReg?utm_source=github.com&utm_medium=referral&utm_content=vd1371/PyImbalReg&utm_campaign=Badge_Grade)
-
 ## Pre-processing technics for imbalanced datasets in regression modelling
+
+[![PyPI version](https://badge.fury.io/py/PyImbalReg.svg)](https://badge.fury.io/py/PyImbalReg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/525f3e4f9261425eba1e40ff2b1d7710)](https://app.codacy.com/gh/vd1371/PyImbalReg?utm_source=github.com&utm_medium=referral&utm_content=vd1371/PyImbalReg&utm_campaign=Badge_Grade)
+![GitHub last commit](https://img.shields.io/github/last-commit/vd1371/PyImbalReg)
+
 ---
 ### Dealing with imbalanced datasets for regression modelling
 Your trained regression model has heteroskedasticity problem?
