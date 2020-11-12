@@ -26,7 +26,7 @@ class GaussianNoise(DataHandler):
 					perm_amp = 0.1,				 # The permutation amplitude
 					categorical_columns = None	 # categorical columns will be used for generating new samples 
 					):
-		super().__init__(df, y_col, rel_func, threshold)
+		super().__init__(df, y_col, rel_func, thresholds)
 
 		if self._is_u_percentage_correct(u_percentage):
 			self.u_percentage = u_percentage

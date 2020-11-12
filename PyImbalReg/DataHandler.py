@@ -16,7 +16,7 @@ class DataHandler:
 				df = pd.DataFrame(),         # The data as a pandas dataframe
 				y_col = None,				 # The name of the Y column header
 				rel_func = None,			 # The relevance function
-				threshold = None,			 # Thereshol to dertermine the normal and reare samples
+				threshold = 0.9,			 # Thereshol to dertermine the normal and reare samples
 				**kwargs):
 
 		# Not to instantiate the DataHandler more than once
