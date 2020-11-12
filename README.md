@@ -3,6 +3,9 @@
 </div>
 
 # PyImbalReg
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/525f3e4f9261425eba1e40ff2b1d7710)](https://app.codacy.com/gh/vd1371/PyImbalReg?utm_source=github.com&utm_medium=referral&utm_content=vd1371/PyImbalReg&utm_campaign=Badge_Grade)
+
 ## Pre-processing technics for imbalanced datasets in regression modelling
 ---
 ### Dealing with imbalanced datasets for regression modelling
