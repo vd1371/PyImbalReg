@@ -60,8 +60,10 @@ new_data = ro.get()
 3. [WERCS](https://github.com/vd1371/PyImbalReg/tests/Example-WERCS.py)
 ---
 ## Contributions
+
 Please share your issues, new technics and your contributions with us.
 Your help is much appreciated in advance.
+
 ---
 ## If you are using this repository...
 
@@ -70,9 +72,11 @@ Your help is much appreciated in advance.
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
+
 ---
 ## License
 © Vahid Asghari, 2020. Licensed under the General Public License v3.0 (GPLv3).
+
 
 P.S. Some parts of the readme and codes were inspired from https://github.com/nickkunz/smogn
 
