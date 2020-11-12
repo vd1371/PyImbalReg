@@ -6,7 +6,7 @@
 ### Pre-processing technics for imbalanced datasets in regression modelling.
 ---
 ### Dealing with imbalanced datasets for regression modelling
-Your trained regression model has heteroskedasticity problem in your regression model?
+Your trained regression model has heteroskedasticity problem?
 Your model can't predict the extreme values very well?
 Consider using these pre-processing technics for solving these issues probably caused by your imbalanced dataset.
 
