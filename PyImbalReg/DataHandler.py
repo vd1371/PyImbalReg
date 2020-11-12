@@ -16,7 +16,7 @@ class DataHandler:
 				df = pd.DataFrame(),         # The data as a pandas dataframe
 				y_col = None,				 # The name of the Y column header
 				rel_func = None,			 # The relevance function
-				threshold = 0.9,			 # Thereshol to dertermine the normal and reare samples
+				threshold = 0.9,			 # Thereshold to dertermine the normal and reare samples
 				**kwargs):
 
 		# Not to instantiate the DataHandler more than once
@@ -94,7 +94,10 @@ class DataHandler:
 		else:
 			DataHandler.rel_func = rel_func
 
-		if any(DataHandler.rel_func(DataHandler.Y) > 1) or any(DataHandler.rel_func(DataHandler.Y) < 0):
+		# Finding the relevance value of the Y
+		DataHandler.Y_utility = DataHandler.Y.apply(DataHandler.rel_func)
+
+		if any(DataHandler.Y_utility > 1) or any(DataHandler.Y_utility < 0):
 			raise ValueError ("It is expected that the relevance function returns\
 								values between [0, 1]. But it doesn't. Please re-define your function")
 
@@ -109,10 +112,10 @@ class DataHandler:
 		DataHandler.threshold = threshold
 
 		# Finding the rare and normal values
-		DataHandler.set_relevance_values()
+		DataHandler.find_normal_rare_values()
 
 	# Finding the relevance value of the Y
-	def set_relevance_values():
+	def find_normal_rare_values():
 
 		# Finding bins with the normal Y and rare Y
 		DataHandler.rare_bins, DataHandler.normal_bins = [], []
@@ -141,9 +144,6 @@ class DataHandler:
 
 			last_idx = i
 			previous_status = current_status
-
-		# Finding the relevance value of the Y
-		DataHandler.Y_utility = DataHandler.rel_func(DataHandler.Y)
 
 	# Checcikng if the o_percentage is correct
 	@staticmethod
