@@ -1,13 +1,12 @@
-# A simple example of addin gaussian noise 
+# A simple example of addin gaussian noise
 
 import matplotlib.pyplot as plt
 
 from seaborn import load_dataset
-import pandas as pd
 
 import PyImbalReg as pir
 
-def eval(data, train, test, bins, method):
+def evaluate(data, train, test, bins, method):
 	# Creating a function to evaluate the splitting
 
 	print (f" ------- With {method} ---------- ")
@@ -38,14 +37,14 @@ train_set, test_set = pir.train_test_split(df = data,
 							test_size = 0.2,
 							bins = bins,
 							random_state = 165)
-eval (data, train_set, test_set, bins, "PyImbalReg")
+evaluate (data, train_set, test_set, bins, "PyImbalReg")
 
 # Using sklearn train_test_split
 from sklearn.model_selection import train_test_split
 
 train_set, test_set = train_test_split(data,
 										random_state = 244)
-eval (data, train_set, test_set, bins, "sklearn")
+evaluate (data, train_set, test_set, bins, "sklearn")
 
 print ("Based on the results, the mean of the test set and train_set in sklearn "
 		"are different from that of the data. But it's not the case in the PyImbalReg method")

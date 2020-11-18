@@ -2,4 +2,5 @@
 my*
 build/
 dist/
+olddists/
 PyImbalReg.egg-info/
