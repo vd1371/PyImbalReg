@@ -13,17 +13,15 @@ from .DataHandler import DataHandler
 
 class RandomUndersampling(DataHandler):
 
-	def __init__(self,
-					df = pd.DataFrame(),         # The data as a pandas dataframe
-					y_col = None,				 # The name of the Y column header
-					rel_func = None,			 # The relevance function
-					threshold = None,			 # Thereshol to dertermine the normal and reare samples
-					u_percentage = 0.5			 # The undersampling percentage. This fraction will be removed
-					):
-		super().__init__(df, y_col, rel_func, threshold)
-
-		if self._is_u_percentage_correct(u_percentage):
-			self.u_percentage = u_percentage
+	def __init__(self, **params):
+		''' Contructor params:
+		df: Data as pandas dataframe
+		y_col: The name of the Y column header
+		rel_func: The relevance function
+		threshold: Thereshold to dertermine the normal and reare samples
+		u_percentage: The undersampling percentage. This fraction will be removed
+		'''
+		super().__init__(**params)
 
 	def get(self):
 

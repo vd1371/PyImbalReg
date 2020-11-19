@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
-import PyImbalReg as pir
+import PyImbalRegTemp as pir
 
 data = load_dataset('dots')
 
@@ -15,7 +15,8 @@ plt.show()
 
 
 # The default relevance funtion will be used
-ro = pir.RandomOversampling(data,
+ro = pir.RandomOversampling(df = data,
+							rel_func = 'default',
 							threshold = 0.7,
 							o_percentage = 5)
 new_data = ro.get()

@@ -17,38 +17,26 @@ from .RU import RandomUndersampling
 
 class GaussianNoise(DataHandler):
 
-	def __init__(self,
-					df = pd.DataFrame(),         # The data as a pandas dataframe
-					y_col = None,				 # The name of the Y column header
-					rel_func = None,			 # The relevance function
-					threshold = None,			 # Thereshol to dertermine the normal and reare samples
-					u_percentage = 0.5,			 # The undersampling percentage. This fraction will be removed
-					o_percentage = 0.5,			 # The oversampling percentage. (This fraction - 1) will be added
-					perm_amp = 0.1,				 # The permutation amplitude
-					categorical_columns = None	 # categorical columns will be used for generating new samples
-					):
-		super().__init__(df, y_col, rel_func, threshold)
+	def __init__(self, **params):
+		''' Contructor params:
+		df: Data as pandas dataframe
+		y_col: The name of the Y column header
+		rel_func: The relevance function
+		threshold: Thereshold to dertermine the normal and reare samples
+		u_percentage: The undersampling percentage. This fraction will be removed
+		o_percentage: The oversampling percentage. (This fraction - 1) will be added
+		perm_amp: The permutation amplitude
+		categorical_columns: categorical columns will be used for generating new samples
+		'''
 
-		if self._is_u_percentage_correct(u_percentage):
-			self.u_percentage = u_percentage
-
-		if self._is_o_percentage_correct(o_percentage):
-			self.o_percentage = o_percentage
-
-		if self._is_perm_amp_correct(perm_amp):
-			self.perm_amp = perm_amp
-
-		# Finding the categorical columns
-		if categorical_columns is None:
-			categorical_columns = self.get_categorical_cols(df)
-		self.categorical_columns = categorical_columns
+		super().__init__(**params)
 
 	def get(self):
 
 		# Undersampling the normal samples
 		# Other parameters such as df, y_col, and threshold will be...
 		# .. the same as the same parent of GaussianNoise. The parent is DataHandler
-		ru = RandomUndersampling(u_percentage = self.u_percentage)
+		ru = RandomUndersampling()
 		undersample_df = ru.get()
 		oversample_df = self._oversample_with_GN()
 
@@ -70,6 +58,15 @@ class GaussianNoise(DataHandler):
 
 	@staticmethod
 	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
+
+		'''Getting new noisy data points 
+		params:
+		df: a dataframe
+		categorical columns: a list of categorical columns
+		o_percentage: over_sampling percentage
+		perm_amp: permutation amplitude for making noisy data
+		return: a new df with noisy data
+		'''
 
 		# calculating the mean, std of the continuous variables
 		# and finding the frequency of categorical variables

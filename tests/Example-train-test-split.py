@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from seaborn import load_dataset
 
-import PyImbalReg as pir
+import PyImbalRegTemp as pir
 
 def evaluate(data, train, test, bins, method):
 	# Creating a function to evaluate the splitting

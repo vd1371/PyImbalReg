@@ -32,7 +32,7 @@ def train_test_split (df = pd.DataFrame(),			# A data frame with the last column
 		raise ValueError ("The random_state must be integer")
 
 	# Check if the bins is an integer
-	if not isinstance(random_state, int):
+	if not isinstance(bins, int):
 		raise ValueError ("The bins must be integer")
 
 	# Get the last column as the target value

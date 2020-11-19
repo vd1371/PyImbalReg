@@ -12,20 +12,15 @@ from .DataHandler import DataHandler
 
 class WERCS(DataHandler):
 
-	def __init__(self,
-					df = pd.DataFrame(),         # The data as a pandas dataframe
-					y_col = None,				 # The name of the Y column header
-					rel_func = None,			 # The relevance function
-					u_percentage = 0.5,			 # The undersampling percentage. This fraction will be removed
-					o_percentage = 2			 # The oversampling percentage. This fraction - 1 will be added
-					):
-		super().__init__(df, y_col, rel_func)
-
-		if self._is_u_percentage_correct(u_percentage):
-			self.u_percentage = u_percentage
-
-		if self._is_o_percentage_correct(o_percentage):
-			self.o_percentage = o_percentage
+	def __init__(self, **params):
+		''' Contructor params:
+		df: Data as pandas dataframe
+		y_col: The name of the Y column header
+		rel_func: The relevance function
+		u_percentage: The undersampling percentage. This fraction will be removed
+		o_percentage: The oversampling percentage. (This fraction - 1) will be added
+		'''
+		super().__init__(**params)
 
 	def get(self):
 

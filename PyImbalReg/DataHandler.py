@@ -12,12 +12,23 @@ class DataHandler:
 
 	instance = None
 
-	def __init__(self,
-				df = pd.DataFrame(),         # The data as a pandas dataframe
-				y_col = None,				 # The name of the Y column header
-				rel_func = None,			 # The relevance function
-				threshold = 0.9,			 # Thereshold to dertermine the normal and reare samples
-				**kwargs):
+	def __init__(self, **params):
+		'''Building the base for other methods built upon is
+		df: The data as a pandas dataframe
+		y_col: The name of the Y column header
+		rel_func: The relevance function
+		threshold: Thereshold to dertermine the normal and rare samples
+		'''
+
+		df = params.pop("df", None)
+		y_col = params.pop("y_col", None)
+		rel_func = params.pop("rel_func", None)
+		threshold = params.pop("threshold", 0.9)
+		o_percentage = params.pop("o_percentage", 2)
+		u_percentage = params.pop("u_percentage", 0.2)
+		perm_amp = params.pop("perm_amp", 0.1)
+		categorical_columns = params.pop("categorical_columns", None)
+		bins = params.pop("bins", 10)
 
 		# Not to instantiate the DataHandler more than once
 		if DataHandler.instance is None:
@@ -26,11 +37,13 @@ class DataHandler:
 
 			# The current version of PyImbalReg is designed to work only with pandas dataframes
 			if not isinstance(df, pd.DataFrame):
-				raise TypeError ("The current version of PyImbalReg can only work on pandas dataframes.")
+				raise TypeError ("The current version of PyImbalReg can "\
+									"only work on pandas dataframes.")
 
 			# The data must not contain any Nan values
 			if df.isnull().values.any():
-				raise ValueError ("The dataframe consists NaN values. Please consider removing them.")
+				raise ValueError ("The dataframe consists NaN values. "\
+										"Please consider removing them.")
 
 			# Getting the Y column
 			# If y is none, then the last column is considered as Y
@@ -69,13 +82,34 @@ class DataHandler:
 			Pre-processing approaches for imbalanced distributions in regression.
 			Neurocomputing, 343, pp.76-99.
 			'''
-			DataHandler.set_relevance_function(rel_func, threshold)
+
+			DataHandler.o_percentage = self._is_o_percentage_correct(o_percentage)
+			DataHandler.u_percentage = self._is_u_percentage_correct(u_percentage)
+			DataHandler.perm_amp = self._is_perm_amp_correct(perm_amp)
+			DataHandler.bins = self._is_bins_correct(bins)
+
+			# Finding the categorical columns
+			if categorical_columns is None:
+				categorical_columns = DataHandler.get_categorical_cols(df)
+			DataHandler.categorical_columns = categorical_columns
+
+			# If rel_func is not set
+			if not rel_func is None:
+				DataHandler.set_relevance_function(rel_func, threshold)
+
+	# Set the undersampling percentage
+	def set_u_percentage(u_percentage):
+		DataHandler.u_percentage = self._is_u_percentage_correct(u_percentage)
+
+	# Set the oversampling percentage
+	def set_o_percentage(o_percentage):
+		DataHandler.o_percentage = self._is_o_percentage_correct(o_percentage)
 
 	# Assigning the relevance function and the threshold
 	def set_relevance_function(rel_func, threshold):
 
 		# The default behaviour
-		if rel_func is None:
+		if rel_func == 'default':
 			average, std = DataHandler.Y.mean(), DataHandler.Y.std()
 
 			# Default relevance function is based on probability distribution function ...
@@ -157,7 +191,7 @@ class DataHandler:
 		elif not (o_percentage > 1):
 			raise ValueError ("The o_percentage must be bigger than 1. But it's not.")
 
-		return True
+		return o_percentage
 
 	# Checcikng if the u_percentage is correct
 	@staticmethod
@@ -172,7 +206,7 @@ class DataHandler:
 		elif not (u_percentage > 0 and u_percentage < 1):
 			raise ValueError ("The u_percentage must be between [0,1]. But it's not.")
 
-		return True
+		return u_percentage
 
 	# Checking if the permutation amplitude is a float
 	@staticmethod
@@ -181,12 +215,20 @@ class DataHandler:
 		if not isinstance(perm_amp, (int, float)):
 			raise ValueError ("The perm_amp must be float")
 
-		return True
+		return perm_amp
+
+	# Checking if the bins is an integer
+	@staticmethod
+	def _is_bins_correct(bins):
+		# bins: number of bins for making histogram
+		if not isinstance(bins, int):
+			raise ValueError ("The bins must be integer")
+
+		return bins
 
 	# Getting the categorical columns of a dataframe
 	@staticmethod
 	def get_categorical_cols(df):
-
 		# This method is called when the categorical columns are not passed by the user
 
 		warning_message = "\n\n---------------------------------------\n" +\
@@ -213,7 +255,6 @@ class DataHandler:
 					categorical_columns.append(col)
 
 		return categorical_columns
-
 
 
 
