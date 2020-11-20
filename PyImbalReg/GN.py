@@ -7,6 +7,7 @@ Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
+
 '''
 import numpy as np
 import pandas as pd
@@ -28,7 +29,6 @@ class GaussianNoise(DataHandler):
 		perm_amp: The permutation amplitude
 		categorical_columns: categorical columns will be used for generating new samples
 		'''
-
 		super().__init__(**params)
 
 	def get(self):
@@ -58,8 +58,7 @@ class GaussianNoise(DataHandler):
 
 	@staticmethod
 	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
-
-		'''Getting new noisy data points 
+		'''Getting new noisy data points
 		params:
 		df: a dataframe
 		categorical columns: a list of categorical columns
@@ -67,7 +66,6 @@ class GaussianNoise(DataHandler):
 		perm_amp: permutation amplitude for making noisy data
 		return: a new df with noisy data
 		'''
-
 		# calculating the mean, std of the continuous variables
 		# and finding the frequency of categorical variables
 		info_dict = {}

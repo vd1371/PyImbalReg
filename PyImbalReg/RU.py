@@ -1,10 +1,11 @@
 '''
-This module is designed to undersample the normal samples.
 
+This module is designed to undersample the normal samples.
 Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
+
 '''
 import pandas as pd
 
@@ -19,8 +20,7 @@ class RandomUndersampling(DataHandler):
 		y_col: The name of the Y column header
 		rel_func: The relevance function
 		threshold: Thereshold to dertermine the normal and reare samples
-		u_percentage: The undersampling percentage. This fraction will be removed
-		'''
+		u_percentage: The undersampling percentage. This fraction will be removed'''
 		super().__init__(**params)
 
 	def get(self):

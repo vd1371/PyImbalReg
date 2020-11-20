@@ -20,7 +20,6 @@ class RandomOversampling(DataHandler):
 		threshold: Thereshold to dertermine the normal and reare samples
 		o_percentage: The oversampling percentage. (This fraction - 1) will be added
 		'''
-
 		super().__init__(**params)
 
 	def get(self):

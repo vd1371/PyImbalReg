@@ -1,21 +1,27 @@
-'''train_test_split
+'''
+
+train_test_split
 The idea is to develop atrain_test_split that randomly split the data
 so the distribution of the test_set and the train set are similar. The train_test_split
 provided by sklearn library does not consider the imbalanced problem in datasets
+
 '''
 
 import pandas as pd
 import numpy as np
 
-def train_test_split (df = pd.DataFrame(),			# A data frame with the last column as target value
-					test_size = None,				# A float between 0 and 1, indicates the portion of test set
-					bins = None,					# Number of bins to make histogram with
-					random_state = None,			# random_state to make sampling reproducable
-					**kwargs
+def train_test_split (df = pd.DataFrame(),
+					test_size = None,
+					bins = None,
+					random_state = None
 					):
 	'''Splits a dataframe to train and test dataframes with similar distributions
-	Returns:
-	Two pandas dataframes: Train set and test set'''
+	params:
+	df: A data frame with the last column as target value
+	test_size: A float between 0 and 1, indicates the portion of test set
+	bins: Number of bins to make histogram with
+	random_state: random_state to make sampling reproducable
+	Returns: Two pandas dataframes: Train set and test set'''
 	# The current version of PyImbalReg is designed to work only with pandas dataframes
 	if not isinstance(df, pd.DataFrame):
 		raise TypeError ("The current version of PyImbalReg can only work on pandas dataframes.")

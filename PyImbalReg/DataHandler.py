@@ -19,7 +19,6 @@ class DataHandler:
 		rel_func: The relevance function
 		threshold: Thereshold to dertermine the normal and rare samples
 		'''
-
 		df = params.pop("df", None)
 		y_col = params.pop("y_col", None)
 		rel_func = params.pop("rel_func", None)
@@ -83,10 +82,10 @@ class DataHandler:
 			Neurocomputing, 343, pp.76-99.
 			'''
 
-			DataHandler.o_percentage = self._is_o_percentage_correct(o_percentage)
-			DataHandler.u_percentage = self._is_u_percentage_correct(u_percentage)
-			DataHandler.perm_amp = self._is_perm_amp_correct(perm_amp)
-			DataHandler.bins = self._is_bins_correct(bins)
+			DataHandler.o_percentage = DataHandler._is_o_percentage_correct(o_percentage)
+			DataHandler.u_percentage = DataHandler._is_u_percentage_correct(u_percentage)
+			DataHandler.perm_amp = DataHandler._is_perm_amp_correct(perm_amp)
+			DataHandler.bins = DataHandler._is_bins_correct(bins)
 
 			# Finding the categorical columns
 			if categorical_columns is None:
@@ -186,7 +185,6 @@ class DataHandler:
 		# Check if the o_percentage is a float
 		if not isinstance(o_percentage, (int, float)):
 			raise ValueError ("The o_percentage must be float")
-		
 		# Check if the o_percentage is between 0 and 1
 		elif not (o_percentage > 1):
 			raise ValueError ("The o_percentage must be bigger than 1. But it's not.")
