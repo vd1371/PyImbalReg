@@ -1,7 +1,7 @@
 # A simple example of using gaussian noise based on histogram frequency
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
-import PyImbalRegTemp as pir
+import PyImbalReg as pir
 
 
 data = load_dataset('dots')
@@ -15,7 +15,10 @@ plt.show()
 
 print (len(data), "-----------------")
 
-gnhf = pir.GNHF(df = data, perm_amp = 0.01)
+gnhf = pir.GNHF(df = data,
+				perm_amp = 0.01,
+				bins = 50,
+				should_log_transform = False)
 
 new_data = gnhf.get()
 
