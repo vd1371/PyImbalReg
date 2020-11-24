@@ -14,7 +14,7 @@ class DataHandler:
 
 	def __init__(self, **params):
 		'''Building the base for other methods built upon is
-		
+
 		df: The data as a pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
@@ -94,7 +94,8 @@ class DataHandler:
 			DataHandler.categorical_columns = categorical_columns
 
 			# Setting the relveance function, normal bins, rare bins, ...
-			DataHandler.set_relevance_function(rel_func, threshold)
+			if not rel_func is None:
+				DataHandler.set_relevance_function(rel_func, threshold)
 
 	# Set the undersampling percentage
 	def set_u_percentage(u_percentage):
@@ -108,7 +109,7 @@ class DataHandler:
 	def set_relevance_function(rel_func, threshold):
 
 		# The default behaviour
-		if rel_func == 'default' or rel_func is None:
+		if rel_func == 'default':
 			average, std = DataHandler.Y.mean(), DataHandler.Y.std()
 
 			# Default relevance function is based on probability distribution function ...
@@ -246,7 +247,6 @@ class DataHandler:
 
 			# Checking the integer columns
 			elif pd.api.types.is_integer_dtype(df[col].dtypes):
-				
 				# A heuristic method to check if the column in categorical
 				if df[col].nunique() / df[col].count() < 0.05:
 					categorical_columns.append(col)

@@ -29,11 +29,12 @@ class GaussianNoise(DataHandler):
 		super().__init__(**params)
 
 	def get(self):
-		"""getting the output """
+		"""getting the output
 
-		# Undersampling the normal samples
-		# Other parameters such as df, y_col, and threshold will be...
-		# .. the same as the same parent of GaussianNoise. The parent is DataHandler
+		Undersampling the normal samples
+		Other parameters such as df, y_col, and threshold will be...
+		.. the same as the same parent of GaussianNoise. The parent is DataHandler
+		"""
 		ru = RandomUndersampling()
 		undersample_df = ru.get()
 		oversample_df = self._oversample_with_GN()
@@ -44,20 +45,24 @@ class GaussianNoise(DataHandler):
 		return df
 
 	def _oversample_with_GN(self):
-		'''innder method for getting the oversampled datat'''
+		'''innder method for getting the oversampled datat
 
-		# Over sampling the normal cases
+		Over sampling the normal cases
+		'''
 		oversampled_bins = []
 
 		for df in self.rare_bins:
 			new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
-			oversampled_bins.append(new_df)
+			oversampled_bins += [df, new_df]
 
 		return pd.concat(oversampled_bins)
 
 	@staticmethod
 	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
 		'''Getting new noisy data points
+
+		calculating the mean, std of the continuous variables
+		and finding the frequency of categorical variables
 
 		params:
 		df: a dataframe
@@ -66,8 +71,6 @@ class GaussianNoise(DataHandler):
 		perm_amp: permutation amplitude for making noisy data
 		return: a new df with noisy data
 		'''
-		# calculating the mean, std of the continuous variables
-		# and finding the frequency of categorical variables
 		info_dict = {}
 
 		# CReating a new dataframe to pass as output

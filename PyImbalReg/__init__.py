@@ -3,7 +3,7 @@
 The __init__ for the PyImbalReg
 '''
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 
 
 from .DataHandler import *
@@ -12,3 +12,4 @@ from .RO import RandomOversampling
 from .GN import GaussianNoise
 from .WERCS import WERCS
 from .train_test_split import train_test_split
+from .GNHF import GNHF

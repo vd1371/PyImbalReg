@@ -21,7 +21,6 @@ class RandomUndersampling(DataHandler):
 		super().__init__(**params)
 
 	def get(self):
-		# Under sampling the normal cases
 		"""Getting the new data"""
 		undersampled_bins = []
 

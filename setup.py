@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup (
     name = "PyImbalReg", # Replace with your own username
-    version = "0.0.2",
+    version = "0.0.3",
     author = "Vahid Asghari",
     author_email = "vd1371@gmail.com",
     description = "Pre-processing technics for imbalanced datasets in regression modelling",

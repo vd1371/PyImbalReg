@@ -21,7 +21,6 @@ class WERCS(DataHandler):
 
 	def get(self):
 		"""Get the output dataframe"""
-		# Oversampling with relevance_function values
 		oversample_df = self.df.sample(frac = self.o_percentage - 1, replace = True, weights = self.Y_utility)
 		oversample_df.index = [ f"OverSampled-{i}-{x}" for i, x in enumerate(oversample_df.index)]
 
