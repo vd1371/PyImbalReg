@@ -14,7 +14,7 @@ class DataHandler:
 
 	def __init__(self, **params):
 		'''Building the base for other methods built upon is
-		
+
 		df: The data as a pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
