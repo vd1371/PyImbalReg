@@ -71,7 +71,6 @@ class GaussianNoise(DataHandler):
 		perm_amp: permutation amplitude for making noisy data
 		return: a new df with noisy data
 		'''
-		info_dict = {}
 
 		# CReating a new dataframe to pass as output
 		new_df = pd.DataFrame(columns = df.columns)
@@ -85,25 +84,24 @@ class GaussianNoise(DataHandler):
 				# Find the frequency of each cols
 				# Value counts is a pd.Series. The index is the categories
 				# And the values are the probability of occurrence
-				weights = df[col].value_counts(normalize = True)
-				info_dict[col] = weights
+				counts = df[col].value_counts(normalize = True)
+				weights = counts.values.tolist() / counts.sum()
 
-				new_df[col] = np.random.choice(weights.index.tolist(),
+				new_df[col] = np.random.choice(counts.index.tolist(),
 												size = n,
 												replace = True,
-												p = weights.values.tolist())
+												p = weights)
 
 			else:
 				# Find the mean and std of the columns
-				STD = 1
-				info_dict[col] = [df[col].mean(), df[col].std()]
+				std = df[col].std()
 
 				# Oversampling values
 				oversampled_values = np.random.choice(df[col].values, size = n)
 
 				# Getting the noise to be added to the values
 				noise = np.random.normal(loc = 0,
-										scale = info_dict[col][STD] * perm_amp,
+										scale = std * perm_amp,
 										size = n)
 				# Adding the noise and values to the new_df
 				new_df[col] = oversampled_values + noise
