@@ -1,9 +1,5 @@
-'''
-
-This object is developed for handling the data before conduting any analysis on it
-These processes include but not limited to checking the Nan files, data type, etc.
-'''
-
+# Loading dependencies
+import numpy as np
 import pandas as pd
 import warnings
 from scipy.stats import norm
@@ -15,10 +11,15 @@ class DataHandler:
 	def __init__(self, **params):
 		'''Building the base for other methods built upon is
 
+		This object is developed for handling the data before conduting any analysis on it
+		These processes include but not limited to checking the Nan files, data type, etc.
+
 		df: The data as a pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
 		threshold: Thereshold to dertermine the normal and rare samples
+		should_log_transform: Useful when there is a huge difference betweem
+				the order of the target values
 		'''
 		df = params.pop("df", None)
 		y_col = params.pop("y_col", None)
@@ -29,6 +30,7 @@ class DataHandler:
 		perm_amp = params.pop("perm_amp", 0.1)
 		categorical_columns = params.pop("categorical_columns", None)
 		bins = params.pop("bins", 10)
+		should_log_transform = params.pop("should_log_transform", False)
 
 		# Not to instantiate the DataHandler more than once
 		if DataHandler.instance is None:
@@ -46,9 +48,8 @@ class DataHandler:
 										"Please consider removing them.")
 
 			# Getting the Y column
-			# If y is none, then the last column is considered as Y
 			if y_col is None:
-				DataHandler.Y = df.iloc[:, -1]
+				y_col = df.columns.values[-1]
 
 			# y should be either None or string
 			elif not isinstance(y_col, str):
@@ -58,16 +59,14 @@ class DataHandler:
 			elif not y_col in df.columns.values:
 				raise ValueError ("y must be a column name, but it's not")
 
-			# Then it's a column of the data
-			else:
-				DataHandler.Y = df.loc[:, y_col]
+			# Rearrangin the dataframe so the last column be Y
+			if df.columns.values[-1] != y_col:
+				cols = df.columns.tolist()
+				idx = cols.index(y_col)
+				cols = cols[:idx] + cols[idx+1:] + [cols[idx]]
+				df = df[cols]
 
-				# Rearrangin the dataframe so the last column be Y
-				if df.columns.values[-1] != y_col:
-					cols = df.columns.tolist()
-					idx = cols.index(y_col)
-					cols = cols[:idx] + cols[idx+1:] + [cols[idx]]
-					df = df[cols]
+			DataHandler.Y = np.log(df.iloc[:, -1]) if should_log_transform else df.iloc[:, -1]
 
 			DataHandler.df = df
 			DataHandler.y_col = y_col
