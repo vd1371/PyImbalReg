@@ -1,7 +1,6 @@
 # A simple example of using gaussian noise based on histogram frequency
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
-from scipy.stats import norm
 import PyImbalRegTemp as pir
 
 
