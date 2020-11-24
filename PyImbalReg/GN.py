@@ -1,25 +1,21 @@
-'''Gaussian Noise
-
-This module is designed to undersample a part of the normal cases
-and add gaussian noise to the rare samples
-
-Ref:
-Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-Pre-processing approaches for imbalanced distributions in regression.
-Neurocomputing, 343, pp.76-99.
-'''
-
+# Loading dependencies
 import numpy as np
 import pandas as pd
-
 from .DataHandler import DataHandler
 from .RU import RandomUndersampling
-
 
 class GaussianNoise(DataHandler):
 
 	def __init__(self, **params):
 		'''Contructor params:
+
+		This module is designed to undersample a part of the normal cases
+		and add gaussian noise to the rare samples
+
+		Ref:
+		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
+		Pre-processing approaches for imbalanced distributions in regression.
+		Neurocomputing, 343, pp.76-99.
 
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
@@ -33,10 +29,12 @@ class GaussianNoise(DataHandler):
 		super().__init__(**params)
 
 	def get(self):
-		"""getting the output """
-		# Undersampling the normal samples
-		# Other parameters such as df, y_col, and threshold will be...
-		# .. the same as the same parent of GaussianNoise. The parent is DataHandler
+		"""getting the output
+
+		Undersampling the normal samples
+		Other parameters such as df, y_col, and threshold will be...
+		.. the same as the same parent of GaussianNoise. The parent is DataHandler
+		"""
 		ru = RandomUndersampling()
 		undersample_df = ru.get()
 		oversample_df = self._oversample_with_GN()
@@ -47,8 +45,10 @@ class GaussianNoise(DataHandler):
 		return df
 
 	def _oversample_with_GN(self):
-		'''innder method for getting the oversampled datat'''
-		# Over sampling the normal cases
+		'''innder method for getting the oversampled datat
+
+		Over sampling the normal cases
+		'''
 		oversampled_bins = []
 
 		for df in self.rare_bins:
@@ -61,6 +61,9 @@ class GaussianNoise(DataHandler):
 	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
 		'''Getting new noisy data points
 
+		calculating the mean, std of the continuous variables
+		and finding the frequency of categorical variables
+
 		params:
 		df: a dataframe
 		categorical columns: a list of categorical columns
@@ -68,8 +71,6 @@ class GaussianNoise(DataHandler):
 		perm_amp: permutation amplitude for making noisy data
 		return: a new df with noisy data
 		'''
-		# calculating the mean, std of the continuous variables
-		# and finding the frequency of categorical variables
 		info_dict = {}
 
 		# CReating a new dataframe to pass as output
