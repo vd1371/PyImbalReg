@@ -63,9 +63,9 @@ new_data = ro.get()
 ---
 ## Other examples
 
- 1. [RandomOversampling](https://github.com/vd1371/PyImbalReg/tests/Example-RO.py)
- 2. [GaussianNoise](https://github.com/vd1371/PyImbalReg/tests/Example-GN.py)
- 3. [WERCS](https://github.com/vd1371/PyImbalReg/tests/Example-WERCS.py)
+ 1. [RandomOversampling](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-RO.py)
+ 2. [GaussianNoise](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-GN.py)
+ 3. [WERCS](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-WERCS.py)
 ---
 ## Contributions
 
