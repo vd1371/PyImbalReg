@@ -7,7 +7,7 @@ from seaborn import load_dataset
 import PyImbalReg as pir
 
 def evaluate(data, train, test, bins, method):
-	# Creating a function to evaluate the splitting by showing the 
+	'''Creating a function to evaluate the splitting by showing the histogram'''
 
 	print (f" ------- With {method} ---------- ")
 	print (f"Mean: Data: {data.iloc[:, -1].mean():.2f} " \
@@ -42,8 +42,8 @@ evaluate (data, train_set, test_set, bins, "PyImbalReg")
 # Using sklearn train_test_split
 from sklearn.model_selection import train_test_split
 
-train_set, test_set = train_test_split(data,
-										random_state = 244)
+# Splitting by the train_test_split
+train_set, test_set = train_test_split(data, random_state = 244)
 evaluate (data, train_set, test_set, bins, "sklearn")
 
 print ("Based on the results, the mean of the test set and train_set in sklearn "

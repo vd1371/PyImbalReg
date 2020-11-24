@@ -1,4 +1,4 @@
-'''
+'''Randomoversampling
 
 This module is designed to oversample the rare samples.Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
@@ -13,7 +13,8 @@ from .DataHandler import DataHandler
 class RandomOversampling(DataHandler):
 
 	def __init__(self, **params):
-		''' Contructor params:
+		'''Contructor params:
+
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
@@ -23,6 +24,7 @@ class RandomOversampling(DataHandler):
 		super().__init__(**params)
 
 	def get(self):
+		"""getting the output"""
 
 		# Over sampling the normal cases
 		oversampled_bins = []

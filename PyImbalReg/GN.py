@@ -1,4 +1,4 @@
-'''
+'''Gaussian Noise
 
 This module is designed to undersample a part of the normal cases
 and add gaussian noise to the rare samples
@@ -7,8 +7,8 @@ Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
-
 '''
+
 import numpy as np
 import pandas as pd
 
@@ -19,7 +19,8 @@ from .RU import RandomUndersampling
 class GaussianNoise(DataHandler):
 
 	def __init__(self, **params):
-		''' Contructor params:
+		'''Contructor params:
+
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
@@ -32,6 +33,7 @@ class GaussianNoise(DataHandler):
 		super().__init__(**params)
 
 	def get(self):
+		"""getting the output """
 
 		# Undersampling the normal samples
 		# Other parameters such as df, y_col, and threshold will be...
@@ -46,6 +48,7 @@ class GaussianNoise(DataHandler):
 		return df
 
 	def _oversample_with_GN(self):
+		'''innder method for getting the oversampled datat'''
 
 		# Over sampling the normal cases
 		oversampled_bins = []
@@ -59,6 +62,7 @@ class GaussianNoise(DataHandler):
 	@staticmethod
 	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
 		'''Getting new noisy data points
+
 		params:
 		df: a dataframe
 		categorical columns: a list of categorical columns

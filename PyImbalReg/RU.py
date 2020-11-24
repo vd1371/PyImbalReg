@@ -5,7 +5,6 @@ Ref:
 Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
 Pre-processing approaches for imbalanced distributions in regression.
 Neurocomputing, 343, pp.76-99.
-
 '''
 import pandas as pd
 
@@ -15,7 +14,8 @@ from .DataHandler import DataHandler
 class RandomUndersampling(DataHandler):
 
 	def __init__(self, **params):
-		''' Contructor params:
+		'''Contructor params:
+
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function

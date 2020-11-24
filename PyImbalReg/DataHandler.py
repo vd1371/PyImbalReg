@@ -14,6 +14,7 @@ class DataHandler:
 
 	def __init__(self, **params):
 		'''Building the base for other methods built upon is
+		
 		df: The data as a pandas dataframe
 		y_col: The name of the Y column header
 		rel_func: The relevance function
@@ -97,11 +98,11 @@ class DataHandler:
 
 	# Set the undersampling percentage
 	def set_u_percentage(u_percentage):
-		DataHandler.u_percentage = self._is_u_percentage_correct(u_percentage)
+		DataHandler.u_percentage = DataHandler._is_u_percentage_correct(u_percentage)
 
 	# Set the oversampling percentage
 	def set_o_percentage(o_percentage):
-		DataHandler.o_percentage = self._is_o_percentage_correct(o_percentage)
+		DataHandler.o_percentage = DataHandler._is_o_percentage_correct(o_percentage)
 
 	# Assigning the relevance function and the threshold
 	def set_relevance_function(rel_func, threshold):
@@ -198,7 +199,6 @@ class DataHandler:
 		# Check if the u_percentage is a float
 		if not isinstance(u_percentage, (float)):
 			raise ValueError ("The u_percentage must be float")
-		
 		# Check if the u_percentage is between 0 and 1
 		elif not (u_percentage > 0 and u_percentage < 1):
 			raise ValueError ("The u_percentage must be between [0,1]. But it's not.")
