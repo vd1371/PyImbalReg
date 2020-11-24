@@ -34,7 +34,6 @@ class GaussianNoise(DataHandler):
 
 	def get(self):
 		"""getting the output """
-
 		# Undersampling the normal samples
 		# Other parameters such as df, y_col, and threshold will be...
 		# .. the same as the same parent of GaussianNoise. The parent is DataHandler
@@ -49,7 +48,6 @@ class GaussianNoise(DataHandler):
 
 	def _oversample_with_GN(self):
 		'''innder method for getting the oversampled datat'''
-
 		# Over sampling the normal cases
 		oversampled_bins = []
 

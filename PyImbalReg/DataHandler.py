@@ -246,7 +246,6 @@ class DataHandler:
 
 			# Checking the integer columns
 			elif pd.api.types.is_integer_dtype(df[col].dtypes):
-				
 				# A heuristic method to check if the column in categorical
 				if df[col].nunique() / df[col].count() < 0.05:
 					categorical_columns.append(col)

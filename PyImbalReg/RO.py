@@ -25,7 +25,6 @@ class RandomOversampling(DataHandler):
 
 	def get(self):
 		"""getting the output"""
-
 		# Over sampling the normal cases
 		oversampled_bins = []
 
