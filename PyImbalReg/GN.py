@@ -53,7 +53,7 @@ class GaussianNoise(DataHandler):
 
 		for df in self.rare_bins:
 			new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
-			oversampled_bins.append(new_df)
+			oversampled_bins += [df, new_df]
 
 		return pd.concat(oversampled_bins)
 
