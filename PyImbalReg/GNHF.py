@@ -33,21 +33,21 @@ class GNHF(DataHandler):
 		holder = []
 		for freq, left_ege, right_edge in zip(freqs, edges[:-1], edges[1:]):
 
-			ratio = mean_freq / freq
-			bin_df = self.df[(self.Y > left_ege) & (self.Y < right_edge)]
-
-			# Undersampling given the ratio
-			if ratio < 1:
-				new_df = bin_df.sample(frac = ratio)
-				holder += [new_df]
-			# Oversampling with GN given the ratio
-			else:
-				new_df = GaussianNoise._get_new_noisy_points(
-												bin_df,
-												self.categorical_columns,
-												ratio,
-												self.perm_amp)
-				holder += [new_df, bin_df]
+			bin_df = self.df[(self.Y >= left_ege) & (self.Y <= right_edge)]
+			if len(bin_df) > 0:
+				ratio = mean_freq / freq
+				# Undersampling given the ratio
+				if ratio < 1:
+					new_df = bin_df.sample(frac = ratio)
+					holder += [new_df]
+				# Oversampling with GN given the ratio
+				else:
+					new_df = GaussianNoise._get_new_noisy_points(
+													bin_df,
+													self.categorical_columns,
+													ratio,
+													self.perm_amp)
+					holder += [new_df, bin_df]
 
 		df = pd.concat(holder)
 

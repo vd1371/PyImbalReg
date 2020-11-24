@@ -66,7 +66,7 @@ class DataHandler:
 				cols = cols[:idx] + cols[idx+1:] + [cols[idx]]
 				df = df[cols]
 
-			DataHandler.Y = np.log(df.iloc[:, -1]) if should_log_transform else df.iloc[:, -1]
+			DataHandler.Y = np.log10(df.iloc[:, -1]) if should_log_transform else df.iloc[:, -1]
 
 			DataHandler.df = df
 			DataHandler.y_col = y_col
