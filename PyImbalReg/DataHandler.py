@@ -94,7 +94,8 @@ class DataHandler:
 			DataHandler.categorical_columns = categorical_columns
 
 			# Setting the relveance function, normal bins, rare bins, ...
-			DataHandler.set_relevance_function(rel_func, threshold)
+			if not rel_func is None:
+				DataHandler.set_relevance_function(rel_func, threshold)
 
 	# Set the undersampling percentage
 	def set_u_percentage(u_percentage):
@@ -108,7 +109,7 @@ class DataHandler:
 	def set_relevance_function(rel_func, threshold):
 
 		# The default behaviour
-		if rel_func == 'default' or rel_func is None:
+		if rel_func == 'default':
 			average, std = DataHandler.Y.mean(), DataHandler.Y.std()
 
 			# Default relevance function is based on probability distribution function ...
