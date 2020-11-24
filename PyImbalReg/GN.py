@@ -1,25 +1,21 @@
-'''Gaussian Noise
-
-This module is designed to undersample a part of the normal cases
-and add gaussian noise to the rare samples
-
-Ref:
-Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-Pre-processing approaches for imbalanced distributions in regression.
-Neurocomputing, 343, pp.76-99.
-'''
-
+# Loading dependencies
 import numpy as np
 import pandas as pd
-
 from .DataHandler import DataHandler
 from .RU import RandomUndersampling
-
 
 class GaussianNoise(DataHandler):
 
 	def __init__(self, **params):
 		'''Contructor params:
+
+		This module is designed to undersample a part of the normal cases
+		and add gaussian noise to the rare samples
+
+		Ref:
+		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
+		Pre-processing approaches for imbalanced distributions in regression.
+		Neurocomputing, 343, pp.76-99.
 
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header

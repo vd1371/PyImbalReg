@@ -1,19 +1,16 @@
-'''WERCS
-
-This module is designed to apply WERCS algorithm for imbalanced regression.Ref:
-Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-Pre-processing approaches for imbalanced distributions in regression.
-Neurocomputing, 343, pp.76-99.
-'''
+# Loading dependencies
 import pandas as pd
-
 from .DataHandler import DataHandler
-
 
 class WERCS(DataHandler):
 
 	def __init__(self, **params):
 		'''Contructor params:
+
+		This module is designed to apply WERCS algorithm for imbalanced regression.Ref:
+		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
+		Pre-processing approaches for imbalanced distributions in regression.
+		Neurocomputing, 343, pp.76-99.
 
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
@@ -24,7 +21,6 @@ class WERCS(DataHandler):
 
 	def get(self):
 		"""Get the output dataframe"""
-
 		# Oversampling with relevance_function values
 		oversample_df = self.df.sample(frac = self.o_percentage - 1, replace = True, weights = self.Y_utility)
 		oversample_df.index = [ f"OverSampled-{i}-{x}" for i, x in enumerate(oversample_df.index)]

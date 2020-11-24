@@ -1,19 +1,16 @@
-'''Randomoversampling
-
-This module is designed to oversample the rare samples.Ref:
-Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-Pre-processing approaches for imbalanced distributions in regression.
-Neurocomputing, 343, pp.76-99.
-'''
+# Loading dependencies
 import pandas as pd
-
 from .DataHandler import DataHandler
-
 
 class RandomOversampling(DataHandler):
 
 	def __init__(self, **params):
 		'''Contructor params:
+
+		This module is designed to oversample the rare samples.Ref:
+		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
+		Pre-processing approaches for imbalanced distributions in regression.
+		Neurocomputing, 343, pp.76-99.
 
 		df: Data as pandas dataframe
 		y_col: The name of the Y column header
@@ -25,7 +22,6 @@ class RandomOversampling(DataHandler):
 
 	def get(self):
 		"""getting the output"""
-
 		# Over sampling the normal cases
 		oversampled_bins = []
 
