@@ -1,13 +1,13 @@
-# A simple example of addin gaussian noise
+# A simple example about using train_test_split
 
 import matplotlib.pyplot as plt
 
 from seaborn import load_dataset
 
-import PyImbalRegTemp as pir
+import PyImbalReg as pir
 
 def evaluate(data, train, test, bins, method):
-	# Creating a function to evaluate the splitting
+	# Creating a function to evaluate the splitting by showing the 
 
 	print (f" ------- With {method} ---------- ")
 	print (f"Mean: Data: {data.iloc[:, -1].mean():.2f} " \

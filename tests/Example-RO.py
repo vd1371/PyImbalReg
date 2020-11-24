@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
-import PyImbalRegTemp as pir
+import PyImbalReg as pir
 
 data = load_dataset('dots')
 

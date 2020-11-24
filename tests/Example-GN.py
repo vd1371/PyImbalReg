@@ -5,7 +5,7 @@ from seaborn import load_dataset
 from scipy.stats import norm
 
 
-import PyImbalRegTemp as pir
+import PyImbalReg as pir
 
 
 data = load_dataset('dots')
