@@ -93,18 +93,25 @@ class GaussianNoise(DataHandler):
 												p = weights)
 
 			else:
-				# Find the mean and std of the columns
-				std = df[col].std()
+				# This is for normal sitations
+				if len(df) > 1:
+					# Find the mean and std of the columns
+					std = df[col].std()
 
-				# Oversampling values
-				oversampled_values = np.random.choice(df[col].values, size = n)
+					# Oversampling values
+					oversampled_values = np.random.choice(df[col].values, size = n)
 
-				# Getting the noise to be added to the values
-				noise = np.random.normal(loc = 0,
-										scale = std * perm_amp,
-										size = n)
-				# Adding the noise and values to the new_df
-				new_df[col] = oversampled_values + noise
+					# Getting the noise to be added to the values
+					noise = np.random.normal(loc = 0,
+											scale = std * perm_amp,
+											size = n)
+					# Adding the noise and values to the new_df
+					new_df[col] = oversampled_values + noise
+				# len(df) can only be 1 or bigger than 1
+				# If it's 1, std will be NaN and make problems
+				else :
+					new_df = pd.DataFrame(np.repeat(df.values, n, axis = 0))
+
 
 		# Renaming the indices for further references
 		new_df.index = [ f"GN-{i}-{x}" for i, x in enumerate(new_df.index)]

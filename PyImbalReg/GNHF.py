@@ -49,6 +49,7 @@ class GNHF(DataHandler):
 													self.perm_amp)
 					holder += [new_df, bin_df]
 
+
 		df = pd.concat(holder)
 
 		return df
