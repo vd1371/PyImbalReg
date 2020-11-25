@@ -31,11 +31,16 @@ class DataHandler:
 		categorical_columns = params.pop("categorical_columns", None)
 		bins = params.pop("bins", 10)
 		should_log_transform = params.pop("should_log_transform", False)
+		random_state = params.pop("random_state", None)
 
 		# Not to instantiate the DataHandler more than once
 		if DataHandler.instance is None:
 
 			DataHandler.instance = True
+
+			if not random_state is None:
+				DataHandler.random_state = random_state
+				np.random.seed(random_state)
 
 			# The current version of PyImbalReg is designed to work only with pandas dataframes
 			if not isinstance(df, pd.DataFrame):

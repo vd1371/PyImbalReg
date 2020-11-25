@@ -27,7 +27,9 @@ class RandomOversampling(DataHandler):
 		for df in self.rare_bins:
 
 			# Over sampling the rare cases
-			oversample_df = df.sample(frac = self.o_percentage - 1, replace = True)
+			oversample_df = df.sample(frac = self.o_percentage - 1, 
+									replace = True,
+									random_state = self.random_state)
 			oversample_df.index = [ f"OverSampled-{i}-{x}" for i, x in enumerate(oversample_df.index)]
 
 			# Adding the df and the oversampled df to the oversampled bins

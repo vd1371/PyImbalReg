@@ -21,10 +21,16 @@ class WERCS(DataHandler):
 
 	def get(self):
 		"""Get the output dataframe"""
-		oversample_df = self.df.sample(frac = self.o_percentage - 1, replace = True, weights = self.Y_utility)
+		oversample_df = self.df.sample(frac = self.o_percentage - 1,
+										replace = True,
+										weights = self.Y_utility,
+										random_state = self.random_state)
 		oversample_df.index = [ f"OverSampled-{i}-{x}" for i, x in enumerate(oversample_df.index)]
 
 		# Undersampling with relevance_function values
-		undersample_df = self.df.sample(frac = 1 - self.u_percentage, replace = True, weights = 1 - self.Y_utility)
+		undersample_df = self.df.sample(frac = 1 - self.u_percentage, 
+										replace = True,
+										weights = 1 - self.Y_utility,
+										random_state = self.random_state)
 		undersample_df.index = [ f"UnderSampled-{i}-{x}" for i, x in enumerate(undersample_df.index)]
 		return pd.concat([self.df, oversample_df, undersample_df])

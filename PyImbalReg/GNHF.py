@@ -28,26 +28,30 @@ class GNHF(DataHandler):
 		"""getting the output"""
 
 		freqs, edges = np.histogram(self.Y, bins = self.bins)
+		if any([val <= 1 for val in freqs]):
+			raise ValueError ("A bin with 1 or 0 samples is found. "\
+								"Consider changing the number of bins.")
+
 		mean_freq = np.mean(freqs)
 
 		holder = []
 		for freq, left_ege, right_edge in zip(freqs, edges[:-1], edges[1:]):
 
 			bin_df = self.df[(self.Y >= left_ege) & (self.Y <= right_edge)]
-			if len(bin_df) > 0:
-				ratio = mean_freq / freq
-				# Undersampling given the ratio
-				if ratio < 1:
-					new_df = bin_df.sample(frac = ratio)
-					holder += [new_df]
-				# Oversampling with GN given the ratio
-				else:
-					new_df = GaussianNoise._get_new_noisy_points(
-													bin_df,
-													self.categorical_columns,
-													ratio,
-													self.perm_amp)
-					holder += [new_df, bin_df]
+
+			ratio = mean_freq / freq
+			# Undersampling given the ratio
+			if ratio < 1:
+				new_df = bin_df.sample(frac = ratio)
+				holder += [new_df]
+			# Oversampling with GN given the ratio
+			else:
+				new_df = GaussianNoise._get_new_noisy_points(
+												bin_df,
+												self.categorical_columns,
+												ratio,
+												self.perm_amp)
+				holder += [new_df, bin_df]
 
 
 		df = pd.concat(holder)
