@@ -38,9 +38,8 @@ class DataHandler:
 
 			DataHandler.instance = True
 
-			if not random_state is None:
-				DataHandler.random_state = random_state
-				np.random.seed(random_state)
+			DataHandler.random_state = random_state
+			np.random.seed(random_state)
 
 			# The current version of PyImbalReg is designed to work only with pandas dataframes
 			if not isinstance(df, pd.DataFrame):
@@ -113,7 +112,7 @@ class DataHandler:
 	def set_relevance_function(rel_func, threshold):
 
 		# The default behaviour
-		if rel_func == 'default':
+		if rel_func == 'default' or rel_func is None:
 			average, std = DataHandler.Y.mean(), DataHandler.Y.std()
 
 			# Default relevance function is based on probability distribution function ...
@@ -234,7 +233,7 @@ class DataHandler:
 		# This method is called when the categorical columns are not passed by the user
 
 		warning_message = "\n\n---------------------------------------\n" +\
-						"The categorical_columns is not define by you.\n" +\
+						"The categorical_columns is not defined by you.\n" +\
 						"I will try to find the categorical columns using heuristic methods.\n" +\
 						"There is a small chance it fails. Consider passing the categorical_columns. \n" +\
 						"---------------------------------------\n"
