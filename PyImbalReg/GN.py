@@ -35,7 +35,7 @@ class GaussianNoise(DataHandler):
 		Other parameters such as df, y_col, and threshold will be...
 		.. the same as the same parent of GaussianNoise. The parent is DataHandler
 		"""
-		ru = RandomUndersampling()
+		ru = RandomUndersampling(**self.__dict__)
 		undersample_df = ru.get()
 		oversample_df = self._oversample_with_GN()
 
@@ -51,7 +51,8 @@ class GaussianNoise(DataHandler):
 		'''
 		oversampled_bins = []
 
-		for df in self.rare_bins:
+		for rare_indices in self.rare_bins_indices:
+			df = self.df.loc[rare_indices, :]
 			new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
 			oversampled_bins += [df, new_df]
 

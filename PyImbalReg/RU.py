@@ -24,12 +24,18 @@ class RandomUndersampling(DataHandler):
 		"""Getting the new data"""
 		undersampled_bins = []
 
-		for df in self.normal_bins:
+		for normal_indices in self.normal_bins_indices:
 			# Finding number of sample to be selected
+			df = self.df.loc[normal_indices, :]
 			undersampled_bins.append(df.sample(frac = 1 - self.u_percentage,
 												random_state = self.random_state))
 
+		# Getting the normal bins
+		rare_bins = []
+		for rare_indices in self.rare_bins_indices:
+			rare_bins.append(self.df.loc[rare_indices, :])
+
 		# Concatenating the undersample normal samples and rare samples
-		df = pd.concat(undersampled_bins + self.rare_bins)
+		df = pd.concat(undersampled_bins + rare_bins)
 
 		return df

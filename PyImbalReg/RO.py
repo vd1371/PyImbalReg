@@ -24,8 +24,9 @@ class RandomOversampling(DataHandler):
 		"""getting the output"""
 		oversampled_bins = []
 
-		for df in self.rare_bins:
+		for rare_indices in self.rare_bins_indices:
 
+			df = self.df.loc[rare_indices, :]
 			# Over sampling the rare cases
 			oversample_df = df.sample(frac = self.o_percentage - 1, 
 									replace = True,
@@ -35,7 +36,12 @@ class RandomOversampling(DataHandler):
 			# Adding the df and the oversampled df to the oversampled bins
 			oversampled_bins += [oversample_df , df]
 
+		# Getting the normal bins
+		normal_bins = []
+		for normal_indices in self.normal_bins_indices:
+			normal_bins.append(self.df.loc[normal_indices, :])
+
 		# Concatenating the undersample normal samples and rare samples
-		df = pd.concat(oversampled_bins + self.normal_bins)
+		df = pd.concat(oversampled_bins + normal_bins)
 
 		return df

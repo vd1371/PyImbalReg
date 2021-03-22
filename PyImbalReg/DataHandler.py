@@ -6,8 +6,6 @@ from scipy.stats import norm
 
 class DataHandler:
 
-	instance = None
-
 	def __init__(self, **params):
 		'''Building the base for other methods built upon is
 
@@ -15,14 +13,14 @@ class DataHandler:
 		These processes include but not limited to checking the Nan files, data type, etc.
 
 		df: The data as a pandas dataframe
-		y_col: The name of the Y column header
+		y_col_name_name: The name of the Y column header
 		rel_func: The relevance function
 		threshold: Thereshold to dertermine the normal and rare samples
 		should_log_transform: Useful when there is a huge difference betweem
 				the order of the target values
 		'''
 		df = params.pop("df", None)
-		y_col = params.pop("y_col", None)
+		y_col_name = params.pop("y_col_name", None)
 		rel_func = params.pop("rel_func", None)
 		threshold = params.pop("threshold", 0.9)
 		o_percentage = params.pop("o_percentage", 2)
@@ -32,96 +30,98 @@ class DataHandler:
 		bins = params.pop("bins", 10)
 		should_log_transform = params.pop("should_log_transform", False)
 		random_state = params.pop("random_state", None)
+		self.should_sort = params.pop("should_sort", True)
 
-		# Not to instantiate the DataHandler more than once
-		if DataHandler.instance is None:
 
-			DataHandler.instance = True
+		self.random_state = random_state
+		np.random.seed(random_state)
 
-			DataHandler.random_state = random_state
-			np.random.seed(random_state)
+		# The current version of PyImbalReg is designed to work only with pandas dataframes
+		if not isinstance(df, pd.DataFrame):
+			raise TypeError ("The current version of PyImbalReg can "\
+								"only work on pandas dataframes.")
 
-			# The current version of PyImbalReg is designed to work only with pandas dataframes
-			if not isinstance(df, pd.DataFrame):
-				raise TypeError ("The current version of PyImbalReg can "\
-									"only work on pandas dataframes.")
+		# The data must not contain any Nan values
+		if df.isnull().values.any():
+			raise ValueError ("The dataframe consists NaN values. "\
+									"Please consider removing them.")
 
-			# The data must not contain any Nan values
-			if df.isnull().values.any():
-				raise ValueError ("The dataframe consists NaN values. "\
-										"Please consider removing them.")
+		# Getting the Y column
+		if y_col_name is None:
+			y_col_name = df.columns.values[-1]
 
-			# Getting the Y column
-			if y_col is None:
-				y_col = df.columns.values[-1]
+		# y should be either None or string
+		elif not isinstance(y_col_name, str):
+			raise TypeError ("y must be either None or a string")
 
-			# y should be either None or string
-			elif not isinstance(y_col, str):
-				raise TypeError ("y must be either None or a string")
+		# if y is not one of the data columns
+		elif not y_col_name in df.columns.values:
+			raise ValueError ("y must be a column name, but it's not")
 
-			# if y is not one of the data columns
-			elif not y_col in df.columns.values:
-				raise ValueError ("y must be a column name, but it's not")
+		self.y_col_name = y_col_name
 
-			# Rearrangin the dataframe so the last column be Y
-			if df.columns.values[-1] != y_col:
-				cols = df.columns.tolist()
-				idx = cols.index(y_col)
-				cols = cols[:idx] + cols[idx+1:] + [cols[idx]]
-				df = df[cols]
+		# Rearrangin the dataframe so the last column be Y
+		if df.columns.values[-1] != y_col_name:
+			cols = df.columns.tolist()
+			idx = cols.index(y_col_name)
+			cols = cols[:idx] + cols[idx+1:] + [cols[idx]]
+			df = df[cols]
 
-			DataHandler.Y = np.log10(df.iloc[:, -1]) if should_log_transform else df.iloc[:, -1]
+		self.df = df
 
-			DataHandler.df = df
-			DataHandler.y_col = y_col
+		'''
+		Set the relevance function and threshold
+		Relevenace function is a relevance/utility function that maps the Y to [0, 1]
+		Values of u(Y) > threshold are considered as rare samples
 
-			'''
-			Set the relevance function and threshold
-			Relevenace function is a relevance/utility function that maps the Y to [0, 1]
-			Values of u(Y) > threshold are considered as rare samples
+		Ref:
+		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
+		Pre-processing approaches for imbalanced distributions in regression.
+		Neurocomputing, 343, pp.76-99.
+		'''
 
-			Ref:
-			Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-			Pre-processing approaches for imbalanced distributions in regression.
-			Neurocomputing, 343, pp.76-99.
-			'''
+		self.o_percentage = self._is_o_percentage_correct(o_percentage)
+		self.u_percentage = self._is_u_percentage_correct(u_percentage)
+		self.perm_amp = self._is_perm_amp_correct(perm_amp)
+		self.bins = self._is_bins_correct(bins)
 
-			DataHandler.o_percentage = DataHandler._is_o_percentage_correct(o_percentage)
-			DataHandler.u_percentage = DataHandler._is_u_percentage_correct(u_percentage)
-			DataHandler.perm_amp = DataHandler._is_perm_amp_correct(perm_amp)
-			DataHandler.bins = DataHandler._is_bins_correct(bins)
+		# Finding the categorical columns
+		if categorical_columns is None:
+			categorical_columns = self.get_categorical_cols(df)
+		self.categorical_columns = categorical_columns
 
-			# Finding the categorical columns
-			if categorical_columns is None:
-				categorical_columns = DataHandler.get_categorical_cols(df)
-			DataHandler.categorical_columns = categorical_columns
+		# Setting the relveance function, normal bins, rare bins, ...
+		# Some algorithms do not need rel_func. So, relevance function
+		# ... will not be set
+		if not rel_func is None:
+			# Setting the relevance function and threshold
+			self.set_relevance_function(rel_func, threshold)
 
-			# Setting the relveance function, normal bins, rare bins, ...
-			if not rel_func is None:
-				DataHandler.set_relevance_function(rel_func, threshold)
+			# Finding the rare and normal values
+			self.find_normal_rare_values()
 
 	# Set the undersampling percentage
-	def set_u_percentage(u_percentage):
-		DataHandler.u_percentage = DataHandler._is_u_percentage_correct(u_percentage)
+	def set_u_percentage(self, u_percentage):
+		self.u_percentage = self._is_u_percentage_correct(u_percentage)
 
 	# Set the oversampling percentage
-	def set_o_percentage(o_percentage):
-		DataHandler.o_percentage = DataHandler._is_o_percentage_correct(o_percentage)
+	def set_o_percentage(self, o_percentage):
+		self.o_percentage = self._is_o_percentage_correct(o_percentage)
 
 	# Assigning the relevance function and the threshold
-	def set_relevance_function(rel_func, threshold):
+	def set_relevance_function(self, rel_func, threshold):
 
 		# The default behaviour
 		if rel_func == 'default' or rel_func is None:
-			average, std = DataHandler.Y.mean(), DataHandler.Y.std()
+			average, std = self.df.loc[:, self.y_col_name].mean(), self.df.loc[:, self.y_col_name].std()
 
 			# Default relevance function is based on probability distribution function ...
 			# ... of normal distribution
-			def default_rel_func(x, average = average, std = std, norm_dist = norm):
-				return 1 - norm_dist.pdf(x, loc = average, scale = std) / \
-							 norm_dist.pdf(average, loc = average, scale = std)
+			def default_rel_func(x, average = average, std = std):
+				return 1 - norm.pdf(x, loc = average, scale = std) / \
+							 norm.pdf(average, loc = average, scale = std)
 
-			DataHandler.rel_func = default_rel_func
+			self.rel_func = default_rel_func
 
 		# Check if the rel_fun is a function
 		elif not callable(rel_func):
@@ -129,14 +129,7 @@ class DataHandler:
 
 		# Set the relevance function
 		else:
-			DataHandler.rel_func = rel_func
-
-		# Finding the relevance value of the Y
-		DataHandler.Y_utility = DataHandler.Y.apply(DataHandler.rel_func)
-
-		if any(DataHandler.Y_utility > 1) or any(DataHandler.Y_utility < 0):
-			raise ValueError ("It is expected that the relevance function returns\
-								values between [0, 1]. But it doesn't. Please re-define your function")
+			self.rel_func = rel_func
 
 		# Check if the threshold is a float
 		if not isinstance(threshold, (float)):
@@ -145,41 +138,62 @@ class DataHandler:
 		elif not (threshold > 0 and threshold < 1):
 			raise ValueError ("The threshold must be between [0,1]. But it's not.")
 
-		DataHandler.threshold = threshold
-
-		# Finding the rare and normal values
-		DataHandler.find_normal_rare_values()
+		self.threshold = threshold
 
 	# Finding the relevance value of the Y
-	def find_normal_rare_values(should_sort = True):
+	def find_normal_rare_values(self):
 
 		# Finding bins with the normal Y and rare Y
-		DataHandler.rare_bins, DataHandler.normal_bins = [], []
+		self.rare_bins_indices, self.normal_bins_indices = [], []
 
-		if should_sort:
+		if self.should_sort:
 			# Sorting the values of df
-			DataHandler.df.sort_values(DataHandler.df.columns[-1], inplace = True)
+			self.df.sort_values(self.df.columns[-1], inplace = True)
+		
+		# Resetting index for correct splitting in the following steps
+		self.df.reset_index(drop = False, inplace = True)
 
-		RARE = True
+		# Finding the relevance value of the Y
+		self.df['utility'] = self.df.loc[:, self.y_col_name].apply(self.rel_func)
 
-		previous_status = DataHandler.rel_func(DataHandler.df.iloc[0, -1]) >= DataHandler.threshold
-		start_idx, last_idx = 0, 0
-		for i, idx in enumerate(DataHandler.df.index[1:]):
+		if any(self.df.loc[:, 'utility'] > 1) or any(self.df.loc[:, 'utility'] < 0):
+			raise ValueError ("It is expected that the relevance function returns\
+								values between [0, 1]. But it doesn't. Please re-define your relevance function")
 
-			# Check if it's a rare case or not
-			current_status = DataHandler.rel_func(DataHandler.df.iloc[i, -1]) >= DataHandler.threshold
+		# Assuming all samples are normal at the begining: Normal = 1
+		# And adding the 'R/N' columns for next steps
+		self.df.loc[:, 'R/N'] = 1
 
-			if not current_status == previous_status or idx == DataHandler.df.index[-1]:
-				temp_bin = DataHandler.df.iloc[start_idx:last_idx, :]
-				if previous_status == RARE:
-					DataHandler.rare_bins.append(temp_bin)
-				else:
-					DataHandler.normal_bins.append(temp_bin)
+		# Finding the rare values
+		self.df.loc[self.df['utility'] >= self.threshold, 'R/N'] = -1
 
-				start_idx = i
+		# Shifting the R/N and multiplying it with the original one
+		# Those places where this value is equal to -1 are the boundaries of bins
+		changing_points = self.df.loc[:, 'R/N'] * self.df.loc[:, 'R/N'].shift(periods = 1)
+		
+		# Finding the changing points indices, these indices refer to the left side of a bin
+		chaning_points_idx = self.df[changing_points == -1].index.tolist()
 
-			last_idx = i
-			previous_status = current_status
+		# Addin the 0 and len(df) for indicing
+		chaning_points_idx = [0] + chaning_points_idx + [len(self.df)]
+		for left, right in zip(chaning_points_idx[:-1], chaning_points_idx[1:]):
+			
+			# Selecting the bins' indices
+			selected_bin = self.df.loc[:, 'index'].iloc[left:right].tolist()
+			if self.df.loc[left, 'R/N'] == 1:
+				self.normal_bins_indices.append(selected_bin)
+			else:
+				self.rare_bins_indices.append(selected_bin)
+
+		# Setting the original index as the index one more time
+		self.df.set_index('index', drop = True, inplace = True)
+
+		# Slicing the utility for future use
+		self.Y_utility = self.df.loc[:, 'utility'].copy()
+
+		# dropping the newly created columns
+		self.df.drop(columns = ['R/N', 'utility'], inplace = True)
+
 
 	# Checcikng if the o_percentage is correct
 	@staticmethod

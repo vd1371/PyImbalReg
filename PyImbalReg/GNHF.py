@@ -22,12 +22,14 @@ class GNHF(DataHandler):
 		categorical_columns: categorical columns will be used for generating new samples
 		bins: number of bins for creating histogram
 		'''
+		if not params.pop('rel_func', None) is None:
+			raise ValueError ('GNHF method does not require rel_func. Pass None.') 
 		super().__init__(**params)
 
 	def get(self):
 		"""getting the output"""
 
-		freqs, edges = np.histogram(self.Y, bins = self.bins)
+		freqs, edges = np.histogram(self.df.loc[:, self.y_col_name], bins = self.bins)
 		if any([val <= 1 for val in freqs]):
 			raise ValueError ("A bin with 1 or 0 samples is found. "\
 								"Consider changing the number of bins.")
@@ -37,7 +39,7 @@ class GNHF(DataHandler):
 		holder = []
 		for freq, left_ege, right_edge in zip(freqs, edges[:-1], edges[1:]):
 
-			bin_df = self.df[(self.Y >= left_ege) & (self.Y <= right_edge)]
+			bin_df = self.df[(self.df.loc[:, self.y_col_name] >= left_ege) & (self.df.loc[:, self.y_col_name] <= right_edge)]
 
 			ratio = mean_freq / freq
 			# Undersampling given the ratio
