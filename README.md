@@ -47,7 +47,7 @@ import PyImbalReg as pir
 from seaborn import load_dataset
 data = load_dataset('dots')
 
-ro = pir.RandomOversampling(data,              # Passing the data
+ro = pir.RandomOversampling(df = data,              # Passing the data
 			rel_func = 'default',  # Default relevance function will be used
 			threshold = 0.7,       # Set the threshold
 			o_percentage = 5       # ( o_percentage - 1 ) x n_rare_samples will be added 
