@@ -4,3 +4,4 @@ build/
 dist/
 olddists/
 PyImbalReg.egg-info/
+.venv/
