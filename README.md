@@ -74,13 +74,23 @@ This project uses [uv](https://docs.astral.sh/uv/) for fast, reliable dependency
 
    This creates a virtual environment, installs the package in editable mode, and installs dev dependencies (e.g. pytest, seaborn).
 
-3. **Run tests** (with uv):
+3. **Run tests**:
 
    ```bash
+   uv sync --extra dev
    uv run pytest tests/
    ```
 
-4. **Lock dependencies** (optional):
+4. **Run examples** (requires dev deps for seaborn/matplotlib):
+
+   ```bash
+   uv run python examples/ro.py
+   uv run python examples/gn.py
+   uv run python examples/gnhf.py
+   uv run python examples/wercs.py
+   ```
+
+5. **Lock dependencies** (optional):
 
    ```bash
    uv lock
@@ -122,9 +132,12 @@ new_data = ro.get()
 
 ## More examples
 
-- [Random Oversampling](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-RO.py)
-- [Gaussian Noise](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-GN.py)
-- [WERCS](https://github.com/vd1371/PyImbalReg/blob/main/tests/Example-WERCS.py)
+Runnable scripts (use `uv run python examples/<name>.py` after `uv sync --extra dev`):
+
+- [Random Oversampling](https://github.com/vd1371/PyImbalReg/blob/main/examples/ro.py)
+- [Gaussian Noise](https://github.com/vd1371/PyImbalReg/blob/main/examples/gn.py)
+- [GNHF (Gaussian Noise + Histogram Frequencies)](https://github.com/vd1371/PyImbalReg/blob/main/examples/gnhf.py)
+- [WERCS](https://github.com/vd1371/PyImbalReg/blob/main/examples/wercs.py)
 
 ---
 
