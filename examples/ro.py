@@ -1,8 +1,8 @@
-# A simple example of using gaussian noise based on histogram frequency
+# A simple example of oversampling
+
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
 import PyImbalReg as pir
-
 
 data = load_dataset('dots')
 
@@ -13,22 +13,18 @@ plt.xlabel("Values")
 plt.ylabel("Frequency")
 plt.show()
 
-print (len(data), "-----------------")
 
-gnhf = pir.GNHF(df = data,
-				perm_amp = 0.01,
-				bins = 50,
-				should_log_transform = False)
+# The default relevance funtion will be used
+ro = pir.RandomOversampling(df = data,
+                            rel_func = 'default',
+                            threshold = 0.7,
+                            o_percentage = 5)
+new_data = ro.get()
 
-new_data = gnhf.get()
 
-
-print (len(new_data), "-----------------")
 # Plotting the histogram of target values after oversampling
 plt.hist(new_data.iloc[:, -1].values)
 plt.title('After')
 plt.xlabel("Values")
 plt.ylabel("Frequency")
 plt.show()
-
-

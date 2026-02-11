@@ -1,10 +1,6 @@
-# A simple example of addin gaussian noise
-
+# A simple example of using gaussian noise based on histogram frequency
 import matplotlib.pyplot as plt
 from seaborn import load_dataset
-from scipy.stats import norm
-
-
 import PyImbalReg as pir
 
 
@@ -17,21 +13,17 @@ plt.xlabel("Values")
 plt.ylabel("Frequency")
 plt.show()
 
-average, std = data.iloc[:, -1].mean(), data.iloc[:, -1].std()
+print (len(data), "-----------------")
 
-def default_relevance_function(x):
-	return 1 - norm.pdf(x, loc = average, scale = std) / \
-			norm.pdf(average, loc = average, scale = std)
+gnhf = pir.GNHF(df = data,
+                perm_amp = 0.01,
+                bins = 50,
+                should_log_transform = False)
 
-gn = pir.GaussianNoise(df = data,
-						rel_func = default_relevance_function,
-						threshold = 0.7,
-						o_percentage = 10,
-						u_percentage = 0.3,
-						perm_amp = 0.1)
+new_data = gnhf.get()
 
-new_data = gn.get()
 
+print (len(new_data), "-----------------")
 # Plotting the histogram of target values after oversampling
 plt.hist(new_data.iloc[:, -1].values)
 plt.title('After')
