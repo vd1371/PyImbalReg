@@ -6,111 +6,87 @@ from .RU import RandomUndersampling
 
 class GaussianNoise(DataHandler):
 
-	def __init__(self, **params):
-		'''Contructor params:
+    def __init__(self, **params):
+        """Undersample normal cases and oversample rare cases with Gaussian noise.
 
-		This module is designed to undersample a part of the normal cases
-		and add gaussian noise to the rare samples
+        Ref: Branco et al., Neurocomputing 343, pp.76-99, 2019.
 
-		Ref:
-		Branco, P., Torgo, L. and Ribeiro, R.P., 2019.
-		Pre-processing approaches for imbalanced distributions in regression.
-		Neurocomputing, 343, pp.76-99.
+        Args:
+            df: Data as pandas DataFrame.
+            y_col_name: The name of the Y column header.
+            rel_func: The relevance function.
+            threshold: Threshold to determine the normal and rare samples.
+            u_percentage: Fraction of normal samples to keep.
+            o_percentage: Oversampling factor for rare samples.
+            perm_amp: Permutation amplitude for added noise.
+            categorical_columns: Columns treated as categorical for sampling.
+        """
+        super().__init__(**params)
 
-		df: Data as pandas dataframe
-		y_col: The name of the Y column header
-		rel_func: The relevance function
-		threshold: Thereshold to dertermine the normal and reare samples
-		u_percentage: The undersampling percentage. This fraction will be removed
-		o_percentage: The oversampling percentage. (This fraction - 1) will be added
-		perm_amp: The permutation amplitude
-		categorical_columns: categorical columns will be used for generating new samples
-		'''
-		super().__init__(**params)
+    def get(self):
+        """Return the resampled DataFrame (undersampled normal + GN oversampled rare)."""
+        ru = RandomUndersampling(**self.__dict__)
+        undersample_df = ru.get()
+        oversample_df = self._oversample_with_GN()
 
-	def get(self):
-		"""getting the output
+        # Concatenating the undersample normal samples and rare samples
+        df = pd.concat([undersample_df, oversample_df])
 
-		Undersampling the normal samples
-		Other parameters such as df, y_col, and threshold will be...
-		.. the same as the same parent of GaussianNoise. The parent is DataHandler
-		"""
-		ru = RandomUndersampling(**self.__dict__)
-		undersample_df = ru.get()
-		oversample_df = self._oversample_with_GN()
+        return df
 
-		# Concatenating the undersample normal samples and rare samples
-		df = pd.concat([undersample_df, oversample_df])
+    def _oversample_with_GN(self):
+        """Oversample rare bins by adding Gaussian noise."""
+        oversampled_bins = []
 
-		return df
+        for rare_indices in self.rare_bins_indices:
+            df = self.df.loc[rare_indices, :]
+            new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
+            oversampled_bins += [df, new_df]
 
-	def _oversample_with_GN(self):
-		'''innder method for getting the oversampled datat
+        return pd.concat(oversampled_bins)
 
-		Over sampling the normal cases
-		'''
-		oversampled_bins = []
+    @staticmethod
+    def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
+        """Generate new synthetic points by adding Gaussian noise.
 
-		for rare_indices in self.rare_bins_indices:
-			df = self.df.loc[rare_indices, :]
-			new_df = self._get_new_noisy_points(df, self.categorical_columns, self.o_percentage, self.perm_amp)
-			oversampled_bins += [df, new_df]
+        Args:
+            df: Source DataFrame.
+            categorical_columns: List of categorical column names.
+            o_percentage: Oversampling factor.
+            perm_amp: Noise scale (fraction of column std).
 
-		return pd.concat(oversampled_bins)
+        Returns:
+            New DataFrame with synthetic noisy samples.
+        """
+        new_df = pd.DataFrame(columns=df.columns)
+        n = int((o_percentage - 1) * len(df))
 
-	@staticmethod
-	def _get_new_noisy_points(df, categorical_columns, o_percentage, perm_amp):
-		'''Getting new noisy data points
+        for col in df.columns:
 
-		calculating the mean, std of the continuous variables
-		and finding the frequency of categorical variables
+            if col in categorical_columns:
+                counts = df[col].value_counts(normalize=True)
+                weights = counts.values  # already probabilities (sum=1)
 
-		params:
-		df: a dataframe
-		categorical columns: a list of categorical columns
-		o_percentage: over_sampling percentage
-		perm_amp: permutation amplitude for making noisy data
-		return: a new df with noisy data
-		'''
+                new_df[col] = np.random.choice(
+                    counts.index.tolist(),
+                    size=n,
+                    replace=True,
+                    p=weights,
+                )
 
-		# CReating a new dataframe to pass as output
-		new_df = pd.DataFrame(columns = df.columns)
+            else:
+                oversampled_values = np.random.choice(
+                    df[col].values, size=n, replace=True
+                )
+                std = df[col].std()
+                noise = np.random.normal(
+                    loc=0, scale=std * perm_amp, size=n
+                )
+                new_df[col] = oversampled_values + noise
 
-		# Finding number of samples to be added
-		n = int((o_percentage-1) * len(df))
+        new_df.index = [f"GN-{i}-{x}" for i, x in enumerate(new_df.index)]
 
-		for col in df.columns:
-
-			if col in categorical_columns:
-				# Find the frequency of each cols
-				# Value counts is a pd.Series. The index is the categories
-				# And the values are the probability of occurrence
-				counts = df[col].value_counts(normalize = True)
-				weights = counts.values.tolist() / counts.sum()
-
-				new_df[col] = np.random.choice(counts.index.tolist(),
-												size = n,
-												replace = True,
-												p = weights)
-
-			else:
-				# Oversampling values
-				oversampled_values = np.random.choice(df[col].values, 
-														size = n,
-														replace = True)
-				# Find the mean and std of the columns
-				std = df[col].std()
-				# Getting the noise to be added to the values
-				noise = np.random.normal(loc = 0,
-										scale = std * perm_amp,
-										size = n)
-				# Adding the noise and values to the new_df
-				new_df[col] = oversampled_values + noise
-
-		# Renaming the indices for further references
-		new_df.index = [ f"GN-{i}-{x}" for i, x in enumerate(new_df.index)]
-
-		return new_df
+        return new_df
 
 
 
